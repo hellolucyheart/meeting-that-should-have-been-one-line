@@ -141,6 +141,12 @@ def main():
     text = line.encode("utf-8")
     if not 1 <= len(text) <= 200 or not line.strip():
         raise SystemExit("entry fails the 1-200 character gate")
+    # The brief's first criterion is a single line, one sentence: a
+    # winning candidate must never smuggle in a second sentence or a
+    # line break, however it scored. Exactly one sentence-ending
+    # full stop, and no newline anywhere in the text.
+    if line.count(".") != 1 or "\n" in line or "\r" in line:
+        raise SystemExit("entry is not exactly one sentence")
     output_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(output_dir, exist_ok=True)
     path = os.path.join(output_dir, "entry.txt")
